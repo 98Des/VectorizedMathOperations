@@ -11,30 +11,38 @@ namespace Vectorized_Math_Operations
     internal abstract class MatrixBase<T> : IMatrix<T>, IEnumerable<T>
         where T : struct
     {
-        private protected enum Type
+        private protected T[]? _matrixElements = null;
+        private protected int _matrixSize = 0;
+        private protected int _matrixRows = 0;
+        private protected int _matrixColumns = 0;
+
+        public virtual bool IsEmpty => _matrixElements == null || _matrixSize == 0;
+
+        public virtual T this[int idx]
         {
-            HorizontalVector,
-            VerticalVector,
-            Matrix,
-            Base
+            get => _matrixElements![idx];
+            set => _matrixElements![idx] = value;
+        }
+        public virtual T this[int idxX, int idxY]
+        {
+            get => _matrixElements![idxY * _matrixRows + idxX];
+            set => _matrixElements![idxY * _matrixRows + idxX] = value;
         }
 
-        private protected T[,]? _values = null;
-        private Type _type = Type.Base;
-
-        public abstract bool IsEmpty { get; }
-        public abstract T this[int idx] { get; set; }
-        public abstract T this[int idxX, int idxY] { get; set; }
-
         public abstract void Append(IMatrix<T> matrix);
-        public abstract void Extend();
         public abstract void FillWith(T value, int howMane = 0);
-        public abstract void Pop();
         public abstract IMatrix<T> Copy();
-        public abstract void Push(T value);
 
+        /// <inheritdoc />
+        public IEnumerator<T> GetEnumerator()
+        {
+            if(this.IsEmpty) yield break;
 
-        public abstract IEnumerator<T> GetEnumerator();
+            for (int i = 0; i < _matrixSize; i++)
+            {
+                yield return _matrixElements![i];
+            }
+        }
         /// <inheritdoc />
         IEnumerator IEnumerable.GetEnumerator()
         {

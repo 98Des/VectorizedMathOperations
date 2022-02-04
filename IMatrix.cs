@@ -14,9 +14,6 @@ namespace Vectorized_Math_Operations
         public T this[int idxX, int idxY] { get; set; }
 
         public IMatrix<T> Copy();
-        public void Push(T value);
-        public void Pop();
-        public void Extend();
         public void FillWith(T value, int howMane = 0);
         public void Append(IMatrix<T> matrix);
     }
